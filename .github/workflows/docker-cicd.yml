@@ -1,0 +1,31 @@
+name: CI/CD - Build & Push Docker Image and Deploy to Render
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: duckduckduck123
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build Docker Image
+        run: docker build -t duckduckduck123/shiva-portfolio:latest .
+
+      - name: Push Docker Image
+        run: docker push duckduckduck123/shiva-portfolio:latest
+
+      - name: Trigger Render Deployment
+        run: |
+          curl -X POST "$RENDER_DEPLOY_HOOK"
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
