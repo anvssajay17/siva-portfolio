@@ -11,4 +11,11 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+
+
+  server: {
+    host: "0.0.0.0",
+    allowedHosts: true, // allows Render domain
+    port: 5173, // optional
+  },
 });
